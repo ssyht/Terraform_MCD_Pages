@@ -49,28 +49,29 @@ Please use the links below to learn the related information for this lab.
 ## 1.4 Goals/Outcomes:
 By the end of this lab module, you will be able to:
 
-(i)	Understand Confidential Computing Concepts
+(i)	Understand the Terraform Worflow & State
 
-* Explain the fundamentals of Confidential Computing and its role in securing multi-cloud and distributed environments.
-* Understand the importance of trust establishment and policy enforcement in secure applications.
+* Explain the plan/apply/destroy lifecycle and why state is critical.
+* Differentiate local vs remote state and when to use S3 + DynamoDB locking.
 
-(ii) Set Up and Configure the Certifier Framework
+(ii) Create a Minimal, Secure AWS Baseline with IaC
 
-* Successfully install and configure the Certifier Framework on their system.
-* Generate cryptographic keys for secure communication.
-* Define, sign, and provision security policies for trusted interactions.
+* Provision a VPC with public/private subnets, NAT, and route tables.
+* Set up security groups with tight ingress/egress and tags for policy-as-code.
+* Launch EC2 instances that are SSM-managed (no public SSH), with hardened user_data bootstrapping.
 
-(iii) Develop Secure Applications Using the Certifier API
+(iii) Apply Guardrails & Least Privilege IAM
 
-* Utilize the Certifier API to enable attestation, secure storage, and trust management in applications.
-* Abstract hardware complexities to make applications portable across different Confidential Computing environments.
+* Author IAM roles/policies for EC2/SSM that follow least-privilege.
+* Understand and attach permission boundaries for student roles in a teaching environment.
+* Restrict administration to SSM Session Manager (no public keys, no open SSH).
 
-(iv) Deploy and Manage Trusted Services
+(iv) Modularize Infrastructure
 
-* Set up the Certifier Service to evaluate attestations and enforce security policies.
-* Manage trust relationships and ensure compliance with defined security policies.
+* Convert repeatable resources into Terraform modules (e.g., network, compute, logging).
+* Parameterize modules with sensible defaults and input validation.
 
-(v) Test and Validate Secure Communication
+(v) Prepare for Arculus Testbed Integration
 
-* Run example applications to demonstrate secure client-server interactions.
-* Verify policy compliance through real-time attestations and trust evaluations.
+* Expose outputs (private IPs, instance profiles, SSM target tags) that later chapters use to deploy Arculus services.
+* Align tagging strategy (e.g., Project=Arculus, Env=Lab, Owner=StudentID) for cost visibility and policy targeting.
