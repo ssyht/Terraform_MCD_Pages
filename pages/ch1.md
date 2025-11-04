@@ -49,7 +49,7 @@ Please use the links below to learn the related information for this lab.
 
 ## 1.4 Conceptual Overview:
 
-
+<a name = "fig2.1"></a><img src = "../img/ch1_overview.png" align = "center"/></center>
 
 
 ## 1.5 Goals/Outcomes:
