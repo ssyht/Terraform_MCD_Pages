@@ -46,7 +46,13 @@ Please use the links below to learn the related information for this lab.
 * <a href ="https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html">*AWS Systems Manager SSM*</a> - Session Manager
 * <a href = "https://docs.aws.amazon.com/kms/latest/developerguide/overview.html">*AWS KMS*</a> - Key Management Service
 * <a href = "https://aws.amazon.com/">*AWS (Amazon Web Services)*</a> - A cloud platform that offers a variety of services, including storage, compute, and databases. AWS allows users to build and run applications on-demand.
-## 1.4 Goals/Outcomes:
+
+## 1.4 Conceptual Overview:
+
+
+
+
+## 1.5 Goals/Outcomes:
 By the end of this lab module, you will be able to:
 
 (i)	Understand the Terraform Worflow & State
