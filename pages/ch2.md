@@ -194,6 +194,9 @@ terraform validate
 terraform apply -auto-approve -var="region=${AWS_REGION}" -var="az=us-east-1a"
 ```
 <a name = "fig2.1"></a><img src = "../img/ch2_Terraform_init_success.png" align = "center"/></center>
+
+* Terraform finished initialization successfully—your working directory is set up and the AWS provider/plugins were found.
+
 <a name = "fig2.1"></a><img src = "../img/ch2_provisioning_done.png" align = "center"/></center>
 
 
