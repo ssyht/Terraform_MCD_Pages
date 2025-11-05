@@ -7,7 +7,7 @@ This module introduces Terraform as the Infrastructure-as-Code (IaC) backbone fo
 By the end of Chapter 1, you’ll have a working local Terraform setup, a reproducible AWS scaffold, and a clear path to layer the Arculus services on top (testbed nodes, micro-segmentation, mTLS, and zero-trust administration).
 
 ## 1.2 Prerequisites
-To following along, you should have:
+To follow along and get the most out of this lab, you should have:
 
 **Accounts & Access**
 
