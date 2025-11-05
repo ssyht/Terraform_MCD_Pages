@@ -8,5 +8,5 @@ You’ll write a minimal Terraform config that creates a VPC, public subnet, int
 
 ## 2.2 Launch EC2 Instance
 
-Sign into your <a href = "[https://developer.hashicorp.com/terraform/tutorials](https://console.aws.amazon.com/)">*AWS Management Console*</a>
+Sign into your <a href = "https://console.aws.amazon.com/">*AWS Management Console*</a>
 
