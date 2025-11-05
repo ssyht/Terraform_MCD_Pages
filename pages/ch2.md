@@ -26,3 +26,26 @@ You will arrive in this CloudShell terminal:
 
 
 Install Terraform into /tmp for this session, reset env vars so it uses CloudShell’s role credentials (no profiles), and point Terraform’s state and plugin cache to /tmp to avoid home-directory quotas—then move into the working directory.
+
+```bash
+export AWS_REGION=${AWS_REGION:-us-east-1}
+
+unset AWS_PROFILE AWS_SDK_LOAD_CONFIG AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
+
+TF_VERSION="1.9.5"
+ARCH=$(uname -m); case "$ARCH" in x86_64) TF_ARCH="amd64" ;; aarch64) TF_ARCH="arm64" ;; *) echo "Unsupported arch: $ARCH"; exit 1 ;; esac
+mkdir -p /tmp/bin /tmp/arculus/ch2
+curl -fsSLo /tmp/terraform.zip "https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_${TF_ARCH}.zip"
+unzip -o /tmp/terraform.zip -d /tmp/bin >/dev/null
+export PATH="/tmp/bin:$PATH"
+terraform -version
+
+export TF_DATA_DIR=/tmp/.tfdata
+export TF_PLUGIN_CACHE_DIR=/tmp/.tfplugins
+mkdir -p "$TF_PLUGIN_CACHE_DIR"
+
+# Work directory
+cd /tmp/arculus/ch2
+<img width="468" height="391" alt="image" src="https://github.com/user-attachments/assets/5e8d20fb-a758-40f8-808c-f697f20cc0d5" />
+
+```
