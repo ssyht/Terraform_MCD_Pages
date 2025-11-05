@@ -14,7 +14,7 @@ You’ll write a minimal Terraform config that creates a VPC, public subnet, int
 <a name = "fig2.1"></a><img src = "../img/ch.2_AWS_region.png" align = "center"/></center>
 
 
-In the top search bar, type CloudShell and select **CloudShell** from the services list.
+In the top search bar, type "CloudShell" and select **CloudShell** from the services list.
 
 <a name = "fig2.1"></a><img src = "../img/ch2_CloudShell_search.png" align = "center"/></center>
 
