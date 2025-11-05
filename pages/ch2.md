@@ -201,8 +201,7 @@ terraform apply -auto-approve -var="region=${AWS_REGION}" -var="az=us-east-1a"
 
 <a name = "fig2.1"></a><img src = "../img/ch2_provisioning_done.png" align = "center"/></center>
 
-
-* Verify you results:
+## 2.4 Verify you results:
 ```bash
 terraform output
 aws ec2 describe-instances \
@@ -211,3 +210,12 @@ aws ec2 describe-instances \
   --output table
 ```
 <a name = "fig2.1"></a><img src = "../img/ch2_terraform_results.png" align = "center"/></center>
+
+* Copy the **Instance ID value**. For example, in the picture above, the instance ID value is "i-0471f2120ae5e11e9".
+
+* In the top search bar, type EC2 and select **EC2** from the services list.
+
+<a name = "fig2.1"></a><img src = "../img/ch2_instances_tab.png" align = "center"/></center>
+
+
+
