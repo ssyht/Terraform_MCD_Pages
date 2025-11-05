@@ -221,5 +221,5 @@ aws ec2 describe-instances \
 
 <a name = "fig2.1"></a><img src = "../img/ch2_instances_tab.png" align = "center"/></center>
 
-
+<a name = "fig2.1"></a><img src = "../img/ch2_instance_check.png" align = "center"/></center>
 
