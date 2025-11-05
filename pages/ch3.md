@@ -36,24 +36,56 @@ cd /tmp/arculus/ch3
 This creates a tiny VPC, public subnet, IGW + route, a unique SG that allows only app_port from allow_cidr, then boots Ubuntu and installs Grafana via user_data. An HTTP URL is emitted.
 
 ```bash
+# From your Chapter 3 work dir
+cd /tmp/arculus/ch3
+
+# Overwrite main.tf with valid multi-line blocks
 cat > main.tf <<'HCL'
 terraform {
   required_providers {
-    aws = { source = "hashicorp/aws", version = "~> 5.0" }
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
   }
 }
 
-# -------- Variables --------
-variable "region"        { type = string, default = "us-east-1" }
-variable "project"       { type = string, default = "arculus-ch3" }
-variable "az"            { type = string, default = "us-east-1a" }   # change at apply time if needed
-variable "instance_type" { type = string, default = "t2.medium" }
-variable "app_port"      { type = number, default = 3000 }
+# -------- Variables (multi-line blocks) --------
+variable "region" {
+  type    = string
+  default = "us-east-1"
+}
+
+variable "project" {
+  type    = string
+  default = "arculus-ch3"
+}
+
+variable "az" {
+  type    = string
+  default = "us-east-1a"  # change at apply time if needed
+}
+
+variable "instance_type" {
+  type    = string
+  default = "t2.medium"
+}
+
+variable "app_port" {
+  type    = number
+  default = 3000
+}
+
 # Start open for verification; tighten to /32 later
-variable "allow_cidr"    { type = string, default = "0.0.0.0/0" }
+variable "allow_cidr" {
+  type    = string
+  default = "0.0.0.0/0"
+}
 
 # -------- Provider --------
-provider "aws" { region = var.region }
+provider "aws" {
+  region = var.region
+}
 
 # -------- Minimal Networking --------
 resource "aws_vpc" "vpc" {
@@ -116,14 +148,23 @@ resource "aws_security_group" "app" {
   tags = { Name = "sample_terra_guardrails" }
 }
 
-# -------- AMI: Ubuntu 22.04 LTS (Canonical 099720109477) --------
+# -------- Ubuntu 22.04 LTS AMI (Canonical 099720109477) --------
 data "aws_ami" "ubuntu_jammy" {
   most_recent = true
   owners      = ["099720109477"]
 
-  filter { name = "name"                 values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"] }
-  filter { name = "virtualization-type"  values = ["hvm"] }
-  filter { name = "architecture"         values = ["x86_64"] }
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
+  }
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
 }
 
 # -------- EC2: Grafana via user_data on port 3000 --------
@@ -158,11 +199,28 @@ resource "aws_instance" "vm" {
 }
 
 # -------- Outputs --------
-output "public_ip"  { value = aws_instance.vm.public_ip }
-output "url"        { value = "http://${aws_instance.vm.public_ip}:${var.app_port}" }
-output "sg_id"      { value = aws_security_group.app.id }
-output "az_used"    { value = var.az }
+output "public_ip" {
+  value = aws_instance.vm.public_ip
+}
+
+output "url" {
+  value = "http://${aws_instance.vm.public_ip}:${var.app_port}"
+}
+
+output "sg_id" {
+  value = aws_security_group.app.id
+}
+
+output "az_used" {
+  value = var.az
+}
 HCL
+
+# Re-init and apply
+terraform init -reconfigure
+terraform fmt
+terraform validate
+terraform apply -auto-approve -var="region=${AWS_REGION}" -var="az=us-east-1a"
 ```
 
 ## 3.3 Init & Apply
