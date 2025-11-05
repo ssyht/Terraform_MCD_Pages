@@ -250,7 +250,7 @@ terraform output # Open the printed `url` in the browser, e.g., http://PUBLIC_IP
 
 * Here you can enter the default "Username: Admin" and "Password: Admin". Then, you can reset your password and enter the portal.
 
-<p align="center"> <img src="../img/ch3_graffana_portal.png" width="500px"></p>
+<p align="center"> <img src="../img/ch3_graffana_portal.png" width="700px"></p>
 
 ## 3.5 Cleanup
 ```bash
