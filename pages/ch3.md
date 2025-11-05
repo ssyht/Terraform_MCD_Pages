@@ -241,6 +241,9 @@ terraform apply -auto-approve -var="region=${AWS_REGION}" -var="az=us-east-1b"
 terraform output # Open the printed `url` in the browser, e.g., http://PUBLIC_IP:3000
 ```
 
+* Once you've entered the link based on the output, you will arrive in the Grafana UI.
+* Here you can enter the default "Username: Admin" and "Password: Admin". Then, you can reset your password and enter the portal.
+
 * Lock it down to a single /32
 Get the current public IP and re-apply with a /32:
 ```bash
