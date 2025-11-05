@@ -6,7 +6,7 @@ In this chapter, you’ll use AWS CloudShell (browser-based shell with AWS CLI) 
 
 You’ll write a minimal Terraform config that creates a VPC, public subnet, internet route, a unique egress-only security group, and an Ubuntu 22.04 t2.medium EC2 instance—then apply, verify outputs, and destroy when finished.
 
-## 2.2 Launch EC2 Instance
+## 2.2 Navigating to CloudShell
 
 * Sign into your <a href = "https://console.aws.amazon.com/">*AWS Management Console*</a>
 * Make sure to select the US East (N. Virginia) region in the top-right part of your screen.
@@ -22,3 +22,7 @@ You will arrive in this CloudShell terminal:
 
 <a name = "fig2.1"></a><img src = "../img/Ch2_CloudShell_StartPage.png" align = "center"/></center>
 
+## 2.2 Running Main.tf Script to Launch EC2 Instance
+
+
+Install Terraform into /tmp for this session, reset env vars so it uses CloudShell’s role credentials (no profiles), and point Terraform’s state and plugin cache to /tmp to avoid home-directory quotas—then move into the working directory.
