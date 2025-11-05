@@ -1,4 +1,4 @@
-# Chapter 3 Guardrails (Expose, Verify, Lock Down)
+# Chapter 3 - Guardrails (Expose, Verify, Lock Down)
 
 ## 3.1 Overview
 
