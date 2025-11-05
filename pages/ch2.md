@@ -227,6 +227,6 @@ aws ec2 describe-instances \
 terraform destroy -auto-approve -var="region=${AWS_REGION}" -var="az=$(terraform output -raw az_used 2>/dev/null || echo us-east-1a)"
 ```
 
-## 2.5 As a Result
+## 2.6 As a Result
 
 This chapter demonstrated provisioning of an EC2 stack with Terraform from AWS CloudShell—installing Terraform in /tmp, directing Terraform state and plugin cache to /tmp, and relying on CloudShell’s role-based credentials. A minimal, production-style configuration was authored: VPC, public subnet, internet route, a unique egress-only security group, and an Ubuntu 22.04 t2.medium instance. Deployment was initialized, applied, and verified via Terraform outputs and the EC2 console.
