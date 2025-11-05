@@ -125,7 +125,7 @@ resource "aws_route_table_association" "assoc" {
 
 # ---- Security Group: NO inbound; all egress (unique name) ----
 resource "aws_security_group" "egress_only" {
-  name_prefix = "sample_terra-"
+  name_prefix = "sample_terra-"    #change this to your unique security group name
   description = "No inbound; all outbound"
   vpc_id      = aws_vpc.vpc.id
 
