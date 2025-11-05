@@ -165,12 +165,43 @@ output "az_used"    { value = var.az }
 HCL
 ```
 
-## 3. 3 Init & Apply
+## 3.3 Init & Apply
 ```bash
 terraform init -reconfigure
 terraform fmt
 terraform validate
 terraform apply -auto-approve -var="region=${AWS_REGION}" -var="az=us-east-1a"
 ```
+ * If the AZ rejects t2.medium, re-run with a supported one:
 
+```bash
+terraform apply -auto-approve -var="region=${AWS_REGION}" -var="az=us-east-1b"
+```
 
+## 3.4 Verifying the Service
+```bash
+terraform output # Open the printed `url` in the browser, e.g., http://PUBLIC_IP:3000
+```
+
+* Lock it down to a single /32
+Get the current public IP and re-apply with a /32:
+```bash
+MYIP="$(curl -s https://checkip.amazonaws.com)/32"
+echo "$MYIP"   # sanity check
+
+terraform apply -auto-approve \
+  -var="region=${AWS_REGION}" \
+  -var="az=$(terraform output -raw az_used)" \
+  -var="allow_cidr=${MYIP}"
+```
+
+## 3.5 Cleanup
+```bash
+terraform destroy -auto-approve \
+  -var="region=${AWS_REGION}" \
+  -var="az=$(terraform output -raw az_used 2>/dev/null || echo us-east-1a)"
+```
+
+## As a Result:
+
+This chapter demonstrated network guardrails as policy-as-code: a minimal Grafana service was deployed, verified via an open ingress rule, and then constrained to a single /32, reducing exposure while preserving functionality. Controls were codified in Terraform (security group, routing, outputs), showing a repeatable pattern to expose, verify, and tighten access. The chapter also introduced a no-ingress direction (SSM port-forwarding) for stricter Zero-Trust edge deployments.
