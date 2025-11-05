@@ -2,4 +2,10 @@
 
 ## 2.1 Overview
 
-In this chapter, you’ll use AWS CloudShell (a browser-based shell with AWS CLI pre-configured) to run Terraform. Keep everything temporary and lightweight by installing Terraform into /tmp for the current session only. Store Terraform state and plugin cache in /tmp to avoid CloudShell home-directory quotas. Write a minimal Terraform config that creates a VPC, public subnet, route to the internet, a unique egress-only security group (sample_terra-*), and a t2.medium Ubuntu 22.04 EC2 instance. Launch infrastructure with terraform apply, verify outputs, and destroy when done.
+In this chapter, you’ll use AWS CloudShell (browser-based shell with AWS CLI) to run Terraform. We’ll keep the setup lightweight by installing Terraform to /tmp for this session and storing Terraform state and plugin cache in /tmp to avoid home-directory limits. 
+
+You’ll write a minimal Terraform config that creates a VPC, public subnet, internet route, a unique egress-only security group (sample_terra-*), and an Ubuntu 22.04 t2.medium EC2 instance—then apply, verify outputs, and destroy when finished.
+
+## 2.2 Launch EC2 Instance
+
+
