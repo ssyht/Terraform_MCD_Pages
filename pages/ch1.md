@@ -5,6 +5,18 @@
 ## 1.1 Purpose of the Lab
 In this lab, you will learn how to use Terraform as the Infrastructure-as-Code (IaC) backbone for the Arculus edge-security testbed. You’ll learn how to describe cloud resources declaratively (VPCs, subnets, security groups, EC2 instances, IAM, SSM, KMS, and Secrets Manager), apply guardrails (least-privilege IAM, permission boundaries, encrypted storage, SSM-only access), and package repeatable environments as modules for students and instructors.
 
+## 1.2 Prerequisites
+To follow along and get the most out of this lab, you should:
+
+* Know basic AWS concepts (VPC, EC2, IAM).
+
+* Be comfortable using a terminal and Git.
+
+* Have Terraform installed locally or use AWS CloudShell.
+
+* Understand JSON/HCL at a beginner level.
+
+* Basic networking knowledge (CIDR, inbound/outbound rules).
 
 ## 1.2 References to guide lab work
 Please use the links below to learn the related information for this lab. 
@@ -16,7 +28,7 @@ Please use the links below to learn the related information for this lab.
 * <a href = "https://docs.aws.amazon.com/kms/latest/developerguide/overview.html">*AWS KMS*</a> - Key Management Service
 * <a href = "https://aws.amazon.com/">*AWS (Amazon Web Services)*</a> - A cloud platform that offers a variety of services, including storage, compute, and databases. AWS allows users to build and run applications on-demand.
 
-## 1.3 Conceptual Overview:
+## 1.3 Conceptual Overview
 
 <a name = "fig2.1"></a><img src = "../img/ch1_overview.png" align = "center"/></center>
 
