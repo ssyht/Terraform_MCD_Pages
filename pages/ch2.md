@@ -20,5 +20,5 @@ In the top search bar, type "CloudShell" and select **CloudShell** from the serv
 
 You will arrive in this CloudShell terminal:
 
-<a name = "fig2.1"></a><img src = "../img/ch2_CloudShell_StartPage.png" align = "center"/></center>
+<a name = "fig2.1"></a><img src = "../img/Ch2_CloudShell_StartPage.png" align = "center"/></center>
 
