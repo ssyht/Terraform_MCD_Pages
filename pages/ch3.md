@@ -31,3 +31,146 @@ mkdir -p "$TF_PLUGIN_CACHE_DIR"
 cd /tmp/arculus/ch3
 ```
 
+## 3.2 Write Main.tf (Grafana on 3000 + guardrail SG)
+
+This creates a tiny VPC, public subnet, IGW + route, a unique SG that allows only app_port from allow_cidr, then boots Ubuntu and installs Grafana via user_data. An HTTP URL is emitted.
+
+```bash
+cat > main.tf <<'HCL'
+terraform {
+  required_providers {
+    aws = { source = "hashicorp/aws", version = "~> 5.0" }
+  }
+}
+
+# -------- Variables --------
+variable "region"        { type = string, default = "us-east-1" }
+variable "project"       { type = string, default = "arculus-ch3" }
+variable "az"            { type = string, default = "us-east-1a" }   # change at apply time if needed
+variable "instance_type" { type = string, default = "t2.medium" }
+variable "app_port"      { type = number, default = 3000 }
+# Start open for verification; tighten to /32 later
+variable "allow_cidr"    { type = string, default = "0.0.0.0/0" }
+
+# -------- Provider --------
+provider "aws" { region = var.region }
+
+# -------- Minimal Networking --------
+resource "aws_vpc" "vpc" {
+  cidr_block           = "10.1.0.0/16"
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+  tags = { Name = "${var.project}-vpc" }
+}
+
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.vpc.id
+  tags   = { Name = "${var.project}-igw" }
+}
+
+resource "aws_subnet" "public" {
+  vpc_id                  = aws_vpc.vpc.id
+  cidr_block              = "10.1.1.0/24"
+  map_public_ip_on_launch = true
+  availability_zone       = var.az
+  tags = { Name = "${var.project}-subnet" }
+}
+
+resource "aws_route_table" "rt" {
+  vpc_id = aws_vpc.vpc.id
+  tags   = { Name = "${var.project}-rt" }
+}
+
+resource "aws_route" "default" {
+  route_table_id         = aws_route_table.rt.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.igw.id
+}
+
+resource "aws_route_table_association" "assoc" {
+  subnet_id      = aws_subnet.public.id
+  route_table_id = aws_route_table.rt.id
+}
+
+# -------- Security Group: app port ingress (variable), all egress --------
+resource "aws_security_group" "app" {
+  name_prefix = "sample_terra-guardrails-"
+  description = "Allow app port; all egress"
+  vpc_id      = aws_vpc.vpc.id
+
+  ingress {
+    from_port   = var.app_port
+    to_port     = var.app_port
+    protocol    = "tcp"
+    cidr_blocks = [var.allow_cidr]
+    description = "App port"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = { Name = "sample_terra_guardrails" }
+}
+
+# -------- AMI: Ubuntu 22.04 LTS (Canonical 099720109477) --------
+data "aws_ami" "ubuntu_jammy" {
+  most_recent = true
+  owners      = ["099720109477"]
+
+  filter { name = "name"                 values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"] }
+  filter { name = "virtualization-type"  values = ["hvm"] }
+  filter { name = "architecture"         values = ["x86_64"] }
+}
+
+# -------- EC2: Grafana via user_data on port 3000 --------
+locals {
+  user_data = <<-BASH
+    #!/bin/bash
+    set -euxo pipefail
+    apt-get update -y
+    apt-get install -y apt-transport-https software-properties-common wget
+    wget -q -O - https://packages.grafana.com/gpg.key | apt-key add -
+    add-apt-repository "deb https://packages.grafana.com/oss/deb stable main"
+    apt-get update -y
+    apt-get install -y grafana
+    systemctl enable grafana-server
+    systemctl start grafana-server
+  BASH
+}
+
+resource "aws_instance" "vm" {
+  ami                         = data.aws_ami.ubuntu_jammy.id
+  instance_type               = var.instance_type
+  subnet_id                   = aws_subnet.public.id
+  vpc_security_group_ids      = [aws_security_group.app.id]
+  associate_public_ip_address = true
+  user_data                   = local.user_data
+
+  tags = {
+    Name    = "${var.project}-vm"
+    Project = var.project
+    Role    = "grafana"
+  }
+}
+
+# -------- Outputs --------
+output "public_ip"  { value = aws_instance.vm.public_ip }
+output "url"        { value = "http://${aws_instance.vm.public_ip}:${var.app_port}" }
+output "sg_id"      { value = aws_security_group.app.id }
+output "az_used"    { value = var.az }
+HCL
+```
+
+## 3. 3 Init & Apply
+```bash
+terraform init -reconfigure
+terraform fmt
+terraform validate
+terraform apply -auto-approve -var="region=${AWS_REGION}" -var="az=us-east-1a"
+```
+
+
