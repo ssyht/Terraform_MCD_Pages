@@ -235,14 +235,20 @@ terraform apply -auto-approve -var="region=${AWS_REGION}" -var="az=us-east-1a"
 ```bash
 terraform apply -auto-approve -var="region=${AWS_REGION}" -var="az=us-east-1b"
 ```
+<p align="center"> <img src="../img/ch.2_AWS_region.png" width="500px"></p>
+<p align="center"> <img src="../img/ch.2_AWS_region.png" width="500px"></p>
 
 ## 3.4 Verifying the Service
 ```bash
 terraform output # Open the printed `url` in the browser, e.g., http://PUBLIC_IP:3000
 ```
+<p align="center"> <img src="../img/ch.2_AWS_region.png" width="500px"></p>
 
 * Once you've entered the link based on the output, you will arrive in the Grafana UI.
 * Here you can enter the default "Username: Admin" and "Password: Admin". Then, you can reset your password and enter the portal.
+
+<p align="center"> <img src="../img/ch.2_AWS_region.png" width="500px"></p>
+<p align="center"> <img src="../img/ch.2_AWS_region.png" width="500px"></p>
 
 ## 3.5 Cleanup
 ```bash
