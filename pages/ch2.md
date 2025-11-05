@@ -215,6 +215,8 @@ aws ec2 describe-instances \
 
 * In the top search bar, type EC2 and select **EC2** from the services list.
 
+<a name = "fig2.1"></a><img src = "../img/ch2_EC2_search.png" align = "center"/></center>
+
 <a name = "fig2.1"></a><img src = "../img/ch2_instances_tab.png" align = "center"/></center>
 
 
