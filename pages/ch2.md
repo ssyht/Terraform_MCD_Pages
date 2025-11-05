@@ -49,8 +49,8 @@ cd /tmp/arculus/ch2
 <img width="468" height="391" alt="image" src="https://github.com/user-attachments/assets/5e8d20fb-a758-40f8-808c-f697f20cc0d5" />
 
 ```
+**Before Copying/Pasting the main.tf script, follow the instructions below:**
 
-* Copy/Paste the main.tf script(configs include: t2.medium, minimal VPC, route, unique SG)
 * Make sure the variable name under "Project" is changed from "arculus-ch2" to "Your Unique Name". If not changed, the provisioning will fail.
 * Change the "name_prefix" under the Security group section to "Your Unique Name". If not changed, the provisioning will fail due to SG name already existing.
 
