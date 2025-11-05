@@ -196,11 +196,11 @@ terraform fmt
 terraform validate
 terraform apply -auto-approve -var="region=${AWS_REGION}" -var="az=us-east-1a"
 ```
-<a name = "fig2.1"></a><img src = "../img/ch2_Terraform_init_success.png" align = "center"/></center>
+<p align="center"> <img src="../img/ch2_Terraform_init_success.png" width="600px"></p>
 
 * Terraform finished initialization successfully—your working directory is set up and the AWS provider/plugins were found.
 
-<a name = "fig2.1"></a><img src = "../img/ch2_provisioning_done.png" align = "center"/></center>
+<p align="center"> <img src="../img/ch2_provisioning_done.png" width="600px"></p>
 
 ## 2.4 Verify you results:
 ```bash
@@ -210,17 +210,17 @@ aws ec2 describe-instances \
   --query 'Reservations[].Instances[].[InstanceId,InstanceType,Placement.AvailabilityZone,State.Name,PublicIpAddress,Tags[?Key==`Name`].Value|[0],ImageId]' \
   --output table
 ```
-<a name = "fig2.1"></a><img src = "../img/ch2_result.png" align = "center"/></center>
+<p align="center"> <img src="../img/ch2_result.png" width="600px"></p>
 
 * Copy the **Instance ID value**. For example, in the picture above, the instance ID value is "i-0471f2120ae5e11e9".
 
 * In the top search bar, type EC2 and select **EC2** from the services list.
 
-<a name = "fig2.1"></a><img src = "../img/ch2_EC2_search.png" align = "center"/></center>
+<p align="center"> <img src="../img/ch2_EC2_search.png" width="600px"></p>
 
-<a name = "fig2.1"></a><img src = "../img/ch2_instances_tab.png" align = "center"/></center>
+<p align="center"> <img src="../img/ch2_instances_tab.png" width="600px"></p>
 
-<a name = "fig2.1"></a><img src = "../img/ch2_instance_check.png" align = "center"/></center>
+<p align="center"> <img src="../img/ch2_instance_check.png" width="600px"></p>
 
 ## 2.5 As a Result
 
