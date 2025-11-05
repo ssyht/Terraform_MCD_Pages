@@ -68,7 +68,7 @@ variable "region" {
 
 variable "project" {
   type    = string
-  default = "arculus-ch2"
+  default = "arculus-ch2"  # Change the VM name to your unique name, if not, provisioning will fail.
 }
 
 variable "az" {
