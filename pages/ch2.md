@@ -181,6 +181,5 @@ output "public_ip"   { value = aws_instance.vm.public_ip }
 output "sg_id"       { value = aws_security_group.egress_only.id }
 output "az_used"     { value = var.az }
 HCL
-<img width="468" height="645" alt="image" src="https://github.com/user-attachments/assets/2ed81e76-7829-4367-8e4c-bd30fd561193" />
 ```
 
