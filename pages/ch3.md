@@ -8,7 +8,7 @@ This chapter demonstrates least-privilege network access for a simple service. A
 
 ## 3.1 CloudShell Setup (same pattern as Chapter 2)
 
-**What this does (short)**: Installs Terraform to /tmp, uses CloudShell role creds, stores TF state/plugins in /tmp, and prepares the ch3 working directory.
+**What this does**: Installs Terraform to /tmp, uses CloudShell role creds, stores TF state/plugins in /tmp, and prepares the ch3 working directory.
 
 ```bash
 export AWS_REGION=${AWS_REGION:-us-east-1}
