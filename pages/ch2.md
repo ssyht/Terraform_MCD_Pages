@@ -194,3 +194,10 @@ terraform validate
 terraform apply -auto-approve -var="region=${AWS_REGION}" -var="az=us-east-1a"
 ```
 
+```bash
+terraform output
+aws ec2 describe-instances \
+  --filters "Name=tag:Project,Values=arculus-ch2" "Name=instance-state-name,Values=pending,running" \
+  --query 'Reservations[].Instances[].[InstanceId,InstanceType,Placement.AvailabilityZone,State.Name,PublicIpAddress,Tags[?Key==`Name`].Value|[0],ImageId]' \
+  --output table
+```
