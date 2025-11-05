@@ -22,7 +22,7 @@ You will arrive in this CloudShell terminal:
 
 <a name = "fig2.1"></a><img src = "../img/Ch2_CloudShell_StartPage.png" align = "center"/></center>
 
-## 2.2 Running Main.tf Script to Launch EC2 Instance
+## 2.2 Setting up Terraform
 
 
 * Install Terraform into /tmp for this session, reset env vars so it uses CloudShell’s role credentials (no profiles), and point Terraform’s state and plugin cache to /tmp to avoid home-directory quotas—then move into the working directory.
@@ -186,6 +186,8 @@ HCL
 * Run terraform init to download providers and set up the working directory, terraform fmt to auto-format HCL, and terraform validate to catch syntax/config errors.
 
 * Then terraform apply creates the VPC, subnet, route, unique sample_terra SG, and Ubuntu t2.medium EC2 in the specified region/AZ.
+
+## 2.3 Running Main.tf Scripts
 
 ```bash
 terraform init -reconfigure
