@@ -258,6 +258,7 @@ terraform destroy -auto-approve \
   -var="region=${AWS_REGION}" \
   -var="az=$(terraform output -raw az_used 2>/dev/null || echo us-east-1a)"
 ```
+<p align="center"> <img src="../img/ch3_destory.png" width="700px"></p>
 
 ## As a Result:
 
