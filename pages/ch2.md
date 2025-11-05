@@ -50,7 +50,9 @@ cd /tmp/arculus/ch2
 
 ```
 
-* Write main.tf (configs include: t2.medium, minimal VPC, route, unique SG)
+* Copy/Paste the main.tf script(configs include: t2.medium, minimal VPC, route, unique SG)
+* Make sure the variable name under "Project" is changed from "arculus-ch2" to "Your Unique Name". If not changed, the provisioning will fail.
+* Change the "name_prefix" under the Security group section to "Your Unique Name". If not changed, the provisioning will fail due to SG name already existing.
 
 ```bash
 cat > main.tf <<'HCL'
@@ -73,7 +75,7 @@ variable "project" {
 
 variable "az" {
   type    = string
-  default = "us-east-1a"   # change at apply if needed
+  default = "us-east-1a"  
 }
 
 variable "instance_type" {
@@ -123,7 +125,7 @@ resource "aws_route_table_association" "assoc" {
   route_table_id = aws_route_table.rt.id
 }
 
-# ---- Security Group: NO inbound; all egress (unique name) ----
+# Security Group Section:
 resource "aws_security_group" "egress_only" {
   name_prefix = "sample_terra-"    #change this to your unique security group name
   description = "No inbound; all outbound"
