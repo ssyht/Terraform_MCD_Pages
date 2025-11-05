@@ -209,7 +209,7 @@ aws ec2 describe-instances \
   --query 'Reservations[].Instances[].[InstanceId,InstanceType,Placement.AvailabilityZone,State.Name,PublicIpAddress,Tags[?Key==`Name`].Value|[0],ImageId]' \
   --output table
 ```
-<a name = "fig2.1"></a><img src = "../img/ch2_terraform_results.png" align = "center"/></center>
+<a name = "fig2.1"></a><img src = "../img/ch2_result.png" align = "center"/></center>
 
 * Copy the **Instance ID value**. For example, in the picture above, the instance ID value is "i-0471f2120ae5e11e9".
 
