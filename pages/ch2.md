@@ -8,5 +8,11 @@ You’ll write a minimal Terraform config that creates a VPC, public subnet, int
 
 ## 2.2 Launch EC2 Instance
 
-Sign into your <a href = "https://console.aws.amazon.com/">*AWS Management Console*</a>
+* Sign into your <a href = "https://console.aws.amazon.com/">*AWS Management Console*</a>
+* Make sure to select the US East (N. Virginia) region in the top-right part of your screen.
+
+<a name = "fig2.1"></a><img src = "../img/ch2_AWS_region.png" align = "center"/></center>
+
+
+
 
