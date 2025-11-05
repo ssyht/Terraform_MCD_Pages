@@ -183,3 +183,14 @@ output "az_used"     { value = var.az }
 HCL
 ```
 
+* Run terraform init to download providers and set up the working directory, terraform fmt to auto-format HCL, and terraform validate to catch syntax/config errors.
+
+* Then terraform apply creates the VPC, subnet, route, unique sample_terra SG, and Ubuntu t2.medium EC2 in the specified region/AZ.
+
+```bash
+terraform init -reconfigure
+terraform fmt
+terraform validate
+terraform apply -auto-approve -var="region=${AWS_REGION}" -var="az=us-east-1a"
+```
+
