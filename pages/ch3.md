@@ -235,8 +235,8 @@ terraform apply -auto-approve -var="region=${AWS_REGION}" -var="az=us-east-1a"
 ```bash
 terraform apply -auto-approve -var="region=${AWS_REGION}" -var="az=us-east-1b"
 ```
-<p align="center"> <img src="../img/ch.2_AWS_region.png" width="500px"></p>
-<p align="center"> <img src="../img/ch.2_AWS_region.png" width="500px"></p>
+<p align="center"> <img src="../img/ch3_terraform_init_success.png" width="500px"></p>
+<p align="center"> <img src="../img/ch3_terraform_apply.png" width="500px"></p>
 
 ## 3.4 Verifying the Service
 ```bash
