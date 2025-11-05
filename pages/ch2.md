@@ -193,7 +193,11 @@ terraform fmt
 terraform validate
 terraform apply -auto-approve -var="region=${AWS_REGION}" -var="az=us-east-1a"
 ```
+<a name = "fig2.1"></a><img src = "../img/ch2_Terraform_init_success.png" align = "center"/></center>
+<a name = "fig2.1"></a><img src = "../img/ch2_provisioning_done.png" align = "center"/></center>
 
+
+* Verify you results:
 ```bash
 terraform output
 aws ec2 describe-instances \
@@ -201,3 +205,4 @@ aws ec2 describe-instances \
   --query 'Reservations[].Instances[].[InstanceId,InstanceType,Placement.AvailabilityZone,State.Name,PublicIpAddress,Tags[?Key==`Name`].Value|[0],ImageId]' \
   --output table
 ```
+<a name = "fig2.1"></a><img src = "../img/ch2_terraform_results.png" align = "center"/></center>
