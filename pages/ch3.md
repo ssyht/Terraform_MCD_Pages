@@ -54,7 +54,7 @@ variable "region" {
 
 variable "project" {
   type    = string
-  default = "arculus-ch3"
+  default = "arculus-ch3" # <<<<-------------------- CHANGE IT TO YOUR UNIQUE NAME
 }
 
 variable "az" {
