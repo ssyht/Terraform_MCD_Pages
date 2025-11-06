@@ -80,11 +80,6 @@ You’ll use **Terraform** to stand up an **Arculus‑inspired zero‑trust test
 From **AWS CloudShell**:
 
 ```bash
-# 1) Clone the lab repo
-mkdir -p ~/labs && cd ~/labs
-git clone https://example.com/mizzou/terraform-arculus-lab.git
-cd terraform-arculus-lab/chapters/02-single-ec2-ssm-only
-
 # 2) Initialize & plan
 terraform init
 terraform plan -out tf.plan \
