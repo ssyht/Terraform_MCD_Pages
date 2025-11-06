@@ -212,7 +212,7 @@ aws ec2 describe-instances \
   --query 'Reservations[].Instances[].[InstanceId,InstanceType,Placement.AvailabilityZone,State.Name,PublicIpAddress,Tags[?Key==`Name`].Value|[0],ImageId]' \
   --output table
 ```
-<p align="center"> <img src="../img/ch2_result.png" width="800px"></p>
+<p align="center"> <img src="../img/ch2_result.png" width="950px"></p>
 
 * Copy the **Instance ID value**. For example, in the picture above, the instance ID value is "i-0471f2120ae5e11e9".
 
