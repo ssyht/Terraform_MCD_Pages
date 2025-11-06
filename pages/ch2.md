@@ -13,7 +13,7 @@ You’ll write a minimal Terraform config that creates a VPC, public subnet, int
 * Sign into your <a href = "https://console.aws.amazon.com/">*AWS Management Console*</a>
 * Make sure to select the US East (N. Virginia) region in the top-right part of your screen.
 
-<p align="center"> <img src="../img/ch.2_AWS_region.png" width="500px"></p>
+<p align="center"> <img src="../img/ch.2_AWS_region.png" width="900px"></p>
 
 
 * In the top search bar, type "CloudShell" and select **CloudShell** from the services list.
