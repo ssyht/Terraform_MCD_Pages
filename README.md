@@ -1,4 +1,4 @@
-# Terraform‑for‑Arculus: Zero‑Trust Edge Security Testbed — **README.md**
+# Terraform‑for‑Arculus: Zero‑Trust Edge Security Testbed
 
 > **Status**: Working draft for the Mizzou Cloud DevOps Modules.
 > **Audience**: Instructors & Students.
