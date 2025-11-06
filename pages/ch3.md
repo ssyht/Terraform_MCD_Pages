@@ -211,12 +211,6 @@ output "az_used" {
   value = var.az
 }
 HCL
-
-# Re-init and apply
-terraform init -reconfigure
-terraform fmt
-terraform validate
-terraform apply -auto-approve -var="region=${AWS_REGION}" -var="az=us-east-1a"
 ```
 
 ## 3.3 Init & Apply
