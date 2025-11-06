@@ -18,7 +18,7 @@ You’ll write a minimal Terraform config that creates a VPC, public subnet, int
 
 * In the top search bar, type "CloudShell" and select **CloudShell** from the services list.
 
-<p align="center"> <img src="../img/ch2_CloudShell_search.png" width="600px"></p>
+<p align="center"> <img src="../img/ch2_CloudShell_search.png" width="850px"></p>
 * You will arrive in this CloudShell terminal:
 
 <p align="center"> <img src="../img/Ch2_CloudShell_StartPage.png" width="900px"></p>
