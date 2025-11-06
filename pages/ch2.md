@@ -6,6 +6,8 @@ In this chapter, you’ll use AWS CloudShell (browser-based shell with AWS CLI) 
 
 You’ll write a minimal Terraform config that creates a VPC, public subnet, internet route, a unique egress-only security group, and an Ubuntu 22.04 t2.medium EC2 instance—then apply, verify outputs, and destroy when finished.
 
+<p align="center"> <img src="../img/ch.2_concept_overview.png" width="500px"></p>
+
 ## 2.2 Navigating to CloudShell
 
 * Sign into your <a href = "https://console.aws.amazon.com/">*AWS Management Console*</a>
