@@ -1,6 +1,6 @@
 # Terraform‑for‑Arculus: Zero‑Trust Edge Security Testbed
 
-> **Status**: Working draft for the Mizzou Cloud DevOps Modules.
+> **Status**: For the Mizzou Cloud DevOps Modules.
 > **Audience**: Instructors & Students.
 > **Goal**: A copy‑paste‑friendly lab that teaches Terraform fundamentals while provisioning an Arculus‑style zero‑trust testbed on AWS.
 
