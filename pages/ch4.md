@@ -1,12 +1,12 @@
-# Chapter 3 - Guardrails (Expose, Verify, Lock Down)
+# Chapter 4 - Guardrails (Expose, Verify, Lock Down)
 
-## 3.1 Overview
+## 4.1 Overview
 
 In cloud security, guardrails are predefined, automated controls (e.g., security groups, IAM boundaries, routing rules) that prevent unsafe configurations and enforce desired ones. Guardrails do not block work; they shape it safely by default and make deviations explicit and reviewable.
 
 This chapter demonstrates least-privilege network access for a simple service. A new Ubuntu t2.medium instance is launched with Grafana running on TCP/3000 via user_data. An inbound rule is first opened to the world for quick verification, then tightened to a single /32 address. A URL is emitted for testing, and an optional no-ingress approach (SSM port-forwarding) is outlined for later use.
 
-## 3.1 CloudShell Setup (same pattern as Chapter 2)
+## 4.2 CloudShell Setup (same pattern as Chapter 2)
 
 **What this does**: Installs Terraform to /tmp, uses CloudShell role creds, stores TF state/plugins in /tmp, and prepares the ch3 working directory.
 
@@ -31,7 +31,7 @@ mkdir -p "$TF_PLUGIN_CACHE_DIR"
 cd /tmp/arculus/ch3
 ```
 
-## 3.2 Write Main.tf (Grafana on 3000 + guardrail SG)
+## 4.3 Write Main.tf (Grafana on 3000 + guardrail SG)
 
 This creates a tiny VPC, public subnet, IGW + route, a unique SG that allows only app_port from allow_cidr, then boots Ubuntu and installs Grafana via user_data. An HTTP URL is emitted.
 
@@ -213,7 +213,7 @@ output "az_used" {
 HCL
 ```
 
-## 3.3 Init & Apply
+## 4.4 Init & Apply
 ```bash
 terraform init -reconfigure
 terraform fmt
@@ -228,7 +228,7 @@ terraform apply -auto-approve -var="region=${AWS_REGION}" -var="az=us-east-1b"
 <p align="center"> <img src="../img/ch3_terraform_init_success.png" width="500px"></p>
 <p align="center"> <img src="../img/ch3_terraform_apply.png" width="500px"></p>
 
-## 3.4 Verifying the Service
+## 4.5 Verifying the Service
 ```bash
 terraform output # Open the printed `url` in the browser, e.g., http://PUBLIC_IP:3000
 ```
@@ -242,7 +242,7 @@ terraform output # Open the printed `url` in the browser, e.g., http://PUBLIC_IP
 
 <p align="center"> <img src="../img/ch3_graffana_portal.png" width="1200px"></p>
 
-## 3.5 Cleanup
+## 4.6 Cleanup
 ```bash
 terraform destroy -auto-approve \
   -var="region=${AWS_REGION}" \
@@ -250,6 +250,6 @@ terraform destroy -auto-approve \
 ```
 <p align="center"> <img src="../img/ch3_destroy.png" width="700px"></p>
 
-## As a Result:
+## 4.7 As a Result:
 
 This chapter demonstrated network guardrails as policy-as-code: a minimal Grafana service was deployed, verified via an open ingress rule, and then constrained to a single /32, reducing exposure while preserving functionality. Controls were codified in Terraform (security group, routing, outputs), showing a repeatable pattern to expose, verify, and tighten access. The chapter also introduced a no-ingress direction (SSM port-forwarding) for stricter Zero-Trust edge deployments.
