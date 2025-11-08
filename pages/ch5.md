@@ -273,3 +273,9 @@ common_tags = {
   Module  = "Terraform Chapter 4"
 }
 ```
+## 5.7 Run all three scripts
+```bash
+# 1) Put the four files in a folder
+terraform init
+terraform apply -auto-approve
+```
