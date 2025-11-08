@@ -6,7 +6,7 @@
 
 ---
 
-<p align="center"> <img src="../img/Ch2_concept_overview.png" width="900px"></p>
+<p align="center"> <img src="img/ch1_overview.png" width="900px"></p>
 
 ## Table of Contents
 
