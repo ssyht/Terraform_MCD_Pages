@@ -258,3 +258,18 @@ output "public_ip" {
   description = "Public IP"
 }
 ```
+## 5.6 Terraform.tfvars.example Script
+```bash
+region        = "us-east-1"
+instance_type = "t2.large"
+portal_port   = 3000
+# allow_cidr  = "203.0.113.25/32"   # optional; defaults to caller /32
+
+# key_name   = ""                   # keep empty to avoid SSH; use SSM instead
+db_password  = "vimanceri"
+
+common_tags = {
+  Project = "MizzouCloudDevOps"
+  Module  = "Terraform Chapter 4"
+}
+```
