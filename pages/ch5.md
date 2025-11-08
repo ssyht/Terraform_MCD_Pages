@@ -202,3 +202,47 @@ resource "aws_instance" "portal" {
   tags = merge(var.common_tags, { Name = var.name })
 }
 ```
+
+5.4 Variable.tf Script
+```bash
+variable "name" {
+  type    = string
+  default = "arculus-portal"
+}
+
+variable "region" {
+  type    = string
+  default = "us-east-1"
+}
+
+variable "instance_type" {
+  type    = string
+  default = "t2.large"
+}
+
+variable "portal_port" {
+  type    = number
+  default = 3000
+}
+
+# If empty, we auto-scope to caller /32
+variable "allow_cidr" {
+  type    = string
+  default = ""
+}
+
+# DB password fed to the installer
+variable "db_password" {
+  type    = string
+  default = "vimanceri"
+}
+
+variable "common_tags" {
+  type = map(string)
+  default = {
+    Project = "MizzouCloudDevOps"
+    Module  = "Terraform Chapter 4"
+    Owner   = "Student"
+  }
+}
+```
