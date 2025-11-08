@@ -203,7 +203,7 @@ resource "aws_instance" "portal" {
 }
 ```
 
-5.4 Variable.tf Script
+## 5.4 Variable.tf Script
 ```bash
 variable "name" {
   type    = string
