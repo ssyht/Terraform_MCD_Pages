@@ -6,6 +6,8 @@
 
 ---
 
+<p align="center"> <img src="../img/Ch2_concept_overview.png" width="900px"></p>
+
 ## Table of Contents
 
 1. [What You’ll Build](#what-youll-build)
