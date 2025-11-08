@@ -246,3 +246,15 @@ variable "common_tags" {
   }
 }
 ```
+## 5.5 Outputs.tf Script
+```bash
+output "portal_url" {
+  value       = "http://${aws_instance.portal.public_dns}:${var.portal_port}"
+  description = "Open after cloud-init completes."
+}
+
+output "public_ip" {
+  value       = aws_instance.portal.public_ip
+  description = "Public IP"
+}
+```
