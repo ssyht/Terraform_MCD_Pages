@@ -2,9 +2,9 @@
 
 ## 5.1 Overview
 
-In cloud security, guardrails are predefined, automated controls (e.g., security groups, IAM boundaries, routing rules) that prevent unsafe configurations and enforce desired ones. Guardrails do not block work; they shape it safely by default and make deviations explicit and reviewable.
+In zero-trust edge security, the Arculus portal acts as the policy and visibility plane: it issues identities, enforces service-to-service trust (mTLS), and provides an operator UI/API to observe and control workloads.
 
-This chapter demonstrates least-privilege network access for a simple service. A new Ubuntu t2.medium instance is launched with Grafana running on TCP/3000 via user_data. An inbound rule is first opened to the world for quick verification, then tightened to a single /32 address. A URL is emitted for testing, and an optional no-ingress approach (SSM port-forwarding) is outlined for later use.
+This chapter walks through launching an Ubuntu instance (or AMI pre-baked by the instructor) and bootstrapping the Arculus stack via user_data/Docker Compose. Required inbound ports (e.g., 80/443 for the UI/API, 3000 for the local admin UI, 8440–8443 control channels, 3003, 179, 10250; and UDP 14550–14558/8285 if using telemetry later) are added explicitly, tested, and then tightened. You’ll claim the portal, create an organization/workspace, generate API tokens, and enroll the mission/adversary/research nodes for Chapter 4.
 
 ## 5.2 CloudShell Setup (same pattern as Chapter 4)
 
