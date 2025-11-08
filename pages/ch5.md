@@ -279,3 +279,7 @@ common_tags = {
 terraform init
 terraform apply -auto-approve
 ```
+## 5.8 After completing, destroy all resources
+```bash
+terraform destroy -auto-approve
+```
