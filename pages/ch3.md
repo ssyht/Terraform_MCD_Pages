@@ -2,7 +2,8 @@
 
 ## 3.1 Overview 
 
-# 3.2 Script Commands
+
+## 3.2 Script Commands
 
 **Before Copying/Pasting the main.tf script, follow the instructions below:**
 
