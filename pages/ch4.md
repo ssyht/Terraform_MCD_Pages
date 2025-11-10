@@ -36,6 +36,7 @@ cd /tmp/arculus/ch3
 This creates a tiny VPC, public subnet, IGW + route, a unique SG that allows only app_port from allow_cidr, then boots Ubuntu and installs Grafana via user_data. An HTTP URL is emitted.
 
 ```bash
+cat > main.tf <<'HCL'
 terraform {
   required_version = ">= 1.6.0"
   required_providers {
