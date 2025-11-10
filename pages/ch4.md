@@ -253,11 +253,6 @@ terraform apply -auto-approve
 # verify page/video, then lock down:
 terraform apply -auto-approve -var="allow_cidr=YOUR.PUBLIC.IP/32"
 ```
- * If the AZ rejects t2.medium, re-run with a supported one:
-
-```bash
-terraform apply -auto-approve -var="region=${AWS_REGION}" -var="az=us-east-1b"
-```
 <p align="center"> <img src="../img/ch3_terraform_init_success.png" width="500px"></p>
 <p align="center"> <img src="../img/ch3_terraform_apply.png" width="500px"></p>
 
