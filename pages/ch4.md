@@ -250,8 +250,6 @@ terraform init
 terraform fmt
 terraform validate
 terraform apply -auto-approve
-# verify page/video, then lock down:
-terraform apply -auto-approve -var="allow_cidr=YOUR.PUBLIC.IP/32"
 ```
 <p align="center"> <img src="../img/ch3_terraform_init_success.png" width="500px"></p>
 <p align="center"> <img src="../img/ch4_apply_output.png" width="500px"></p>
