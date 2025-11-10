@@ -37,6 +37,11 @@ This creates a tiny VPC, public subnet, IGW + route, a unique SG that allows onl
 
 ```bash
 cat > main.tf <<'HCL'
+############################################################
+# Chapter 4 — Static Web (AMI baked with nginx + your page)
+# Region: us-east-1 | AMI: ami-0da4418d8d1b56a0c
+############################################################
+
 terraform {
   required_version = ">= 1.6.0"
   required_providers {
@@ -44,30 +49,50 @@ terraform {
   }
 }
 
-provider "aws" { region = "us-east-1" }
+provider "aws" {
+  region = var.region
+}
 
 #########################
-# Vars (NOTE: make changes to the project name, type a unique name)
+# Variables (edit as needed)
 #########################
-variable "project"      { default = "terraform-ch4-web" }
-variable "instance_type"{ default = "t3.micro" }
-variable "availability_zone" { default = "us-east-1a" }
+variable "region"            { type = string, default = "us-east-1" }
+variable "project"           { type = string, default = "terraform-ch4-web" }
+variable "availability_zone" { type = string, default = "us-east-1a" }
+variable "instance_type"     { type = string, default = "t3.micro" }
 
-# SECURITY: Start open to verify, then re-apply with your /32.
-# Example: "161.130.189.235/32"
-variable "allow_cidr"   { default = "0.0.0.0/0" }
+# SECURITY: Start open to verify, then re-apply with your /32
+# e.g., "203.0.113.45/32"
+variable "allow_cidr" { type = string, default = "0.0.0.0/0" }
 
-# Optional SSH (we keep it OFF; use SSM in class)
-variable "enable_ssh"   { default = false }
-variable "ssh_cidr"     { default = "YOUR.PUBLIC.IP/32" }
+# Optional SSH (off by default). Prefer SSM for class.
+variable "enable_ssh" { type = bool,   default = false }
+variable "ssh_cidr"   { type = string, default = "YOUR.PUBLIC.IP/32" }
 
 #########################
-# Minimal networking
+# Locals
+#########################
+locals {
+  web_ami_id = "ami-0da4418d8d1b56a0c"
+
+  # Heredoc marker must be UNQUOTED.
+  user_data = <<-BASH
+    #!/bin/bash
+    set -euo pipefail
+    if command -v systemctl >/dev/null 2>&1; then
+      systemctl enable nginx || true
+      systemctl restart nginx || true
+    fi
+  BASH
+}
+
+#########################
+# Networking (minimal public VPC)
 #########################
 resource "aws_vpc" "this" {
   cidr_block           = "10.44.0.0/16"
-  enable_dns_hostnames = true
   enable_dns_support   = true
+  enable_dns_hostnames = true
   tags = { Name = "${var.project}-vpc" }
 }
 
@@ -101,14 +126,13 @@ resource "aws_route_table_association" "a" {
 }
 
 #########################
-# Security Group
+# Security Group — HTTP :80 from allow_cidr (+ optional SSH)
 #########################
 resource "aws_security_group" "web" {
   name_prefix = "${var.project}-sg-"
   description = "HTTP 80 from allow_cidr; optional SSH; all egress"
   vpc_id      = aws_vpc.this.id
 
-  # HTTP for the web page
   ingress {
     description = "HTTP"
     from_port   = 80
@@ -117,7 +141,6 @@ resource "aws_security_group" "web" {
     cidr_blocks = [var.allow_cidr]
   }
 
-  # Optional SSH (off by default)
   dynamic "ingress" {
     for_each = var.enable_ssh ? [1] : []
     content {
@@ -140,22 +163,8 @@ resource "aws_security_group" "web" {
 }
 
 #########################
-# EC2 from your baked AMI
+# EC2 — launch from your baked AMI
 #########################
-locals {
-  web_ami_id = "ami-0da4418d8d1b56a0c"   # <-- your AMI
-  user_data  = <<'BASH'
-#!/bin/bash
-set -euo pipefail
-# Your AMI already has nginx + /var/www/html.
-# Ensure nginx is enabled/running on boot (idempotent).
-if command -v systemctl >/dev/null 2>&1; then
-  systemctl enable nginx || true
-  systemctl restart nginx || true
-fi
-BASH
-}
-
 resource "aws_instance" "web" {
   ami                         = local.web_ami_id
   instance_type               = var.instance_type
@@ -177,7 +186,8 @@ resource "aws_instance" "web" {
 output "chapter4_url"   { value = "http://${aws_instance.web.public_ip}" }
 output "public_ip"      { value = aws_instance.web.public_ip }
 output "security_group" { value = aws_security_group.web.id }
-output "note"           { value = "AFTER VERIFY: re-apply with -var=allow_cidr=YOUR.IP/32 (or close 80 and use SSM port-forwarding)." }
+output "reminder"       { value = "AFTER VERIFY: re-apply with -var=allow_cidr=YOUR.IP/32 (or close 80 and use SSM port-forwarding)." }
+
 
 HCL
 
