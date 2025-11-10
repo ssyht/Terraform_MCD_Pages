@@ -258,7 +258,7 @@ terraform apply -auto-approve
 ```bash
 terraform output
 ```
-<p align="center"> <img src="../img/ch4_2verify_output.png" width="500px"></p>
+<p align="center"> <img src="../img/ch4_2verify_output.png" width="800px"></p>
 
 * Once you've entered the link based on the output, you will arrive in the Grafana UI.
 
