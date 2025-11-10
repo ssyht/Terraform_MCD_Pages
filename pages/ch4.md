@@ -179,6 +179,8 @@ output "public_ip"      { value = aws_instance.web.public_ip }
 output "security_group" { value = aws_security_group.web.id }
 output "note"           { value = "AFTER VERIFY: re-apply with -var=allow_cidr=YOUR.IP/32 (or close 80 and use SSM port-forwarding)." }
 
+HCL
+
 ```
 
 ## 4.4 Init & Apply
