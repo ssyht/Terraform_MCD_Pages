@@ -2,6 +2,19 @@
 
 ## 3.1 Overview 
 
+This chapter is a hands-on warm-up that turns raw Terraform syntax into real AWS resources. Building on Chapter 2’s one-time provisioning, you’ll practice the day-to-day command flow—init → fmt → validate → apply → output → destroy—while making small but meaningful edits to variables and security-group names so your stack is uniquely identifiable and reproducible.
+
+**By the end of this section, you will:**
+
+* Understand the purpose of each core Terraform command and when to use it.
+
+* Safely modify input variables (e.g., project name, AZ) and explain how those values flow through resources and tags.
+
+* Provision a minimal, production-style network (VPC, public subnet, route, IGW) and a single Ubuntu EC2 instance.
+
+* Create an egress-only security group and recognize why “no inbound, allow outbound” is a sensible default.
+
+* Verify results using both terraform output and the AWS Console, then clean up cleanly with terraform destroy.
 
 ## 3.2 Script Commands
 
