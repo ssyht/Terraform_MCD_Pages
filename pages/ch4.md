@@ -62,9 +62,9 @@ variable "region" {
   default = "us-east-1"
 }
 
-variable "project" {
+variable "project" {                       
   type    = string
-  default = "terraform-ch4-web"
+  default = "terraform-ch4-web"          ##########-------->>>>> NOTE: Change the name of the default to your unique name. 
 }
 
 variable "availability_zone" {
