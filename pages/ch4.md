@@ -249,8 +249,8 @@ HCL
 terraform init
 terraform fmt
 terraform validate
-terraform apply -auto-approve -var="allow_cidr=0.0.0.0/0"
-# verify, then lock down:
+terraform apply -auto-approve
+# verify page/video, then lock down:
 terraform apply -auto-approve -var="allow_cidr=YOUR.PUBLIC.IP/32"
 ```
  * If the AZ rejects t2.medium, re-run with a supported one:
