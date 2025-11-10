@@ -64,7 +64,7 @@ variable "region" {
 
 variable "project" {                       
   type    = string
-  default = "terraform-ch4-web"          ##########-------->>>>> NOTE: Change the name of the default to your unique name. 
+  default = "terraform-ch4-web"          ###-------->>>>> NOTE: Change the name of the default to your unique name. 
 }
 
 variable "availability_zone" {
