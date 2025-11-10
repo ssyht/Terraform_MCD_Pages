@@ -45,8 +45,51 @@ cat > main.tf <<'HCL'
 terraform {
   required_version = ">= 1.6.0"
   required_providers {
-    aws = { source = "hashicorp/aws", version = "~> 5.0" }
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
   }
+}
+
+#########################
+# Variables
+#########################
+variable "region" {
+  type    = string
+  default = "us-east-1"
+}
+
+variable "project" {
+  type    = string
+  default = "terraform-ch4-web"
+}
+
+variable "availability_zone" {
+  type    = string
+  default = "us-east-1a"
+}
+
+variable "instance_type" {
+  type    = string
+  default = "t3.micro"
+}
+
+# Start open to verify; immediately re-apply with your /32 afterwards.
+variable "allow_cidr" {
+  type    = string
+  default = "0.0.0.0/0"
+}
+
+# Optional SSH (off by default). Prefer SSM for class.
+variable "enable_ssh" {
+  type    = bool
+  default = false
+}
+
+variable "ssh_cidr" {
+  type    = string
+  default = "YOUR.PUBLIC.IP/32"
 }
 
 provider "aws" {
@@ -54,28 +97,12 @@ provider "aws" {
 }
 
 #########################
-# Variables (edit as needed)
-#########################
-variable "region"            { type = string, default = "us-east-1" }
-variable "project"           { type = string, default = "terraform-ch4-web" }
-variable "availability_zone" { type = string, default = "us-east-1a" }
-variable "instance_type"     { type = string, default = "t3.micro" }
-
-# SECURITY: Start open to verify, then re-apply with your /32
-# e.g., "203.0.113.45/32"
-variable "allow_cidr" { type = string, default = "0.0.0.0/0" }
-
-# Optional SSH (off by default). Prefer SSM for class.
-variable "enable_ssh" { type = bool,   default = false }
-variable "ssh_cidr"   { type = string, default = "YOUR.PUBLIC.IP/32" }
-
-#########################
 # Locals
 #########################
 locals {
   web_ami_id = "ami-0da4418d8d1b56a0c"
 
-  # Heredoc marker must be UNQUOTED.
+  # Heredoc marker must be UNQUOTED, end marker on its own line.
   user_data = <<-BASH
     #!/bin/bash
     set -euo pipefail
@@ -93,12 +120,16 @@ resource "aws_vpc" "this" {
   cidr_block           = "10.44.0.0/16"
   enable_dns_support   = true
   enable_dns_hostnames = true
-  tags = { Name = "${var.project}-vpc" }
+  tags = {
+    Name = "${var.project}-vpc"
+  }
 }
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.this.id
-  tags   = { Name = "${var.project}-igw" }
+  tags = {
+    Name = "${var.project}-igw"
+  }
 }
 
 resource "aws_subnet" "public_a" {
@@ -106,12 +137,16 @@ resource "aws_subnet" "public_a" {
   cidr_block              = "10.44.1.0/24"
   availability_zone       = var.availability_zone
   map_public_ip_on_launch = true
-  tags = { Name = "${var.project}-public-a" }
+  tags = {
+    Name = "${var.project}-public-a"
+  }
 }
 
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.this.id
-  tags   = { Name = "${var.project}-rt" }
+  tags = {
+    Name = "${var.project}-rt"
+  }
 }
 
 resource "aws_route" "igw_default" {
@@ -159,7 +194,9 @@ resource "aws_security_group" "web" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = { Name = "${var.project}-web-sg" }
+  tags = {
+    Name = "${var.project}-web-sg"
+  }
 }
 
 #########################
@@ -183,10 +220,21 @@ resource "aws_instance" "web" {
 #########################
 # Outputs
 #########################
-output "chapter4_url"   { value = "http://${aws_instance.web.public_ip}" }
-output "public_ip"      { value = aws_instance.web.public_ip }
-output "security_group" { value = aws_security_group.web.id }
-output "reminder"       { value = "AFTER VERIFY: re-apply with -var=allow_cidr=YOUR.IP/32 (or close 80 and use SSM port-forwarding)." }
+output "chapter4_url" {
+  value = "http://${aws_instance.web.public_ip}"
+}
+
+output "public_ip" {
+  value = aws_instance.web.public_ip
+}
+
+output "security_group" {
+  value = aws_security_group.web.id
+}
+
+output "reminder" {
+  value = "AFTER VERIFY: re-apply with -var=allow_cidr=YOUR.IP/32 (or close 80 and use SSM port-forwarding)."
+}
 
 
 HCL
