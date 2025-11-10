@@ -258,7 +258,7 @@ terraform apply -auto-approve -var="allow_cidr=YOUR.PUBLIC.IP/32"
 
 ## 4.5 Verifying the Service
 ```bash
-terraform output # Open the printed `url` in the browser, e.g., http://PUBLIC_IP:3000
+terraform output
 ```
 <p align="center"> <img src="../img/ch3_verify_output.png" width="500px"></p>
 
