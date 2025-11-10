@@ -272,4 +272,4 @@ terraform destroy -auto-approve
 
 ## 4.7 As a Result:
 
-This chapter demonstrated network guardrails as policy-as-code: a minimal Grafana service was deployed, verified via an open ingress rule, and then constrained to a single /32, reducing exposure while preserving functionality. Controls were codified in Terraform (security group, routing, outputs), showing a repeatable pattern to expose, verify, and tighten access. The chapter also introduced a no-ingress direction (SSM port-forwarding) for stricter Zero-Trust edge deployments.
+This chapter proved network guardrails as policy-as-code using a baked AMI + nginx static site: we exposed HTTP:80 to verify the page, then tightened ingress to a single /32, reducing exposure while preserving functionality. The controls were codified entirely in Terraform (VPC, routing, security group, instance, outputs), giving a repeatable pattern to expose → verify → tighten. We also introduced a no-ingress path via SSM port-forwarding for stricter Zero-Trust deployments. Students finish with a reproducible web demo they can launch, verify, lock down, and destroy cleanly before moving on.
