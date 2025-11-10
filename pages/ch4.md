@@ -45,49 +45,68 @@ cat > main.tf <<'HCL'
 terraform {
   required_version = ">= 1.6.0"
   required_providers {
-    aws  = { source = "hashicorp/aws",  version = "~> 5.0" }
-    http = { source = "hashicorp/http", version = "~> 3.4" }
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
   }
 }
 
 #########################
 # Variables
 #########################
-variable "region"            { type = string, default = "us-east-1" }
-variable "project"           { type = string, default = "terraform-ch4-web" }
-variable "availability_zone" { type = string, default = "us-east-1a" }
-variable "instance_type"     { type = string, default = "t3.micro" }
+variable "region" {
+  type    = string
+  default = "us-east-1"
+}
 
-# SECURITY:
-# - "auto" (default) → locks HTTP to caller's /32 automatically.
-# - If a CIDR is supplied and it's invalid, we fall back to auto (no error).
-variable "allow_cidr"        { type = string, default = "auto" }
+variable "project" {
+  type    = string
+  default = "terraform-ch4-web"
+}
 
-# Optional SSH (off by default)
-variable "enable_ssh"        { type = bool,   default = false }
-variable "ssh_cidr"          { type = string, default = "127.0.0.1/32" }
+variable "availability_zone" {
+  type    = string
+  default = "us-east-1a"
+}
+
+variable "instance_type" {
+  type    = string
+  default = "t3.micro"
+}
+
+# Start open to verify; then re-apply with your /32 to lock down.
+# Example: terraform apply -auto-approve -var="allow_cidr=1.2.3.4/32"
+variable "allow_cidr" {
+  type    = string
+  default = "0.0.0.0/0"
+}
+
+# Optional SSH (off by default). Prefer SSM in class.
+variable "enable_ssh" {
+  type    = bool
+  default = false
+}
+
+variable "ssh_cidr" {
+  type    = string
+  default = "127.0.0.1/32" # only used if enable_ssh = true
+}
 
 #########################
-# Providers
+# Provider
 #########################
-provider "aws"  { region = var.region }
-provider "http" {}
-
-# Detect caller IP for "auto" or invalid-CIDR fallback
-data "http" "myip" { url = "https://checkip.amazonaws.com" }
+provider "aws" {
+  region = var.region
+}
 
 #########################
 # Locals
 #########################
 locals {
-  web_ami_id  = "ami-0da4418d8d1b56a0c"
-  detected_ip = chomp(data.http.myip.response_body)
+  web_ami_id = "ami-0da4418d8d1b56a0c"
 
-  # Wrap condition in parentheses so multi-line ternary parses correctly
-  effective_cidr = (
-    var.allow_cidr == "auto" || !can(cidrnetmask(var.allow_cidr))
-  ) ? "${local.detected_ip}/32" : var.allow_cidr
-
+  # Keep nginx up on boot (AMI already has your site)
   user_data = <<-BASH
     #!/bin/bash
     set -euo pipefail
@@ -105,12 +124,16 @@ resource "aws_vpc" "this" {
   cidr_block           = "10.44.0.0/16"
   enable_dns_support   = true
   enable_dns_hostnames = true
-  tags = { Name = "${var.project}-vpc" }
+  tags = {
+    Name = "${var.project}-vpc"
+  }
 }
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.this.id
-  tags   = { Name = "${var.project}-igw" }
+  tags = {
+    Name = "${var.project}-igw"
+  }
 }
 
 resource "aws_subnet" "public_a" {
@@ -118,12 +141,16 @@ resource "aws_subnet" "public_a" {
   cidr_block              = "10.44.1.0/24"
   availability_zone       = var.availability_zone
   map_public_ip_on_launch = true
-  tags = { Name = "${var.project}-public-a" }
+  tags = {
+    Name = "${var.project}-public-a"
+  }
 }
 
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.this.id
-  tags   = { Name = "${var.project}-rt" }
+  tags = {
+    Name = "${var.project}-rt"
+  }
 }
 
 resource "aws_route" "igw_default" {
@@ -138,11 +165,11 @@ resource "aws_route_table_association" "a" {
 }
 
 #########################
-# Security Group — HTTP :80 from effective_cidr (+ optional SSH)
+# Security Group — HTTP :80 from allow_cidr (+ optional SSH)
 #########################
 resource "aws_security_group" "web" {
   name_prefix = "${var.project}-sg-"
-  description = "HTTP 80 from effective_cidr; optional SSH; all egress"
+  description = "HTTP 80 from allow_cidr; optional SSH; all egress"
   vpc_id      = aws_vpc.this.id
 
   ingress {
@@ -150,7 +177,7 @@ resource "aws_security_group" "web" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = [local.effective_cidr]
+    cidr_blocks = [var.allow_cidr]
   }
 
   dynamic "ingress" {
@@ -171,7 +198,9 @@ resource "aws_security_group" "web" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = { Name = "${var.project}-web-sg" }
+  tags = {
+    Name = "${var.project}-web-sg"
+  }
 }
 
 #########################
@@ -195,11 +224,21 @@ resource "aws_instance" "web" {
 #########################
 # Outputs
 #########################
-output "chapter4_url"        { value = "http://${aws_instance.web.public_ip}" }
-output "public_ip"           { value = aws_instance.web.public_ip }
-output "security_group_id"   { value = aws_security_group.web.id }
-output "http_allowed_from"   { value = local.effective_cidr }
+output "chapter4_url" {
+  value = "http://${aws_instance.web.public_ip}"
+}
 
+output "public_ip" {
+  value = aws_instance.web.public_ip
+}
+
+output "security_group_id" {
+  value = aws_security_group.web.id
+}
+
+output "note_relock_http" {
+  value = "After verifying, re-apply with -var=allow_cidr=YOUR.IP/32 to lock HTTP to your /32."
+}
 
 HCL
 
