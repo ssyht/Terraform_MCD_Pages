@@ -30,7 +30,8 @@ You’ll write a minimal Terraform config that creates a VPC, public subnet, int
 
 ```bash
 export AWS_REGION=${AWS_REGION:-us-east-1}
-
+```
+```bash
 unset AWS_PROFILE AWS_SDK_LOAD_CONFIG AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
 
 TF_VERSION="1.9.5"
@@ -40,15 +41,16 @@ curl -fsSLo /tmp/terraform.zip "https://releases.hashicorp.com/terraform/${TF_VE
 unzip -o /tmp/terraform.zip -d /tmp/bin >/dev/null
 export PATH="/tmp/bin:$PATH"
 terraform -version
-
+```
+```bash
 export TF_DATA_DIR=/tmp/.tfdata
 export TF_PLUGIN_CACHE_DIR=/tmp/.tfplugins
+```
+```bash
 mkdir -p "$TF_PLUGIN_CACHE_DIR"
 
 # Work directory
 cd /tmp/arculus/ch2
-<img width="468" height="391" alt="image" src="https://github.com/user-attachments/assets/5e8d20fb-a758-40f8-808c-f697f20cc0d5" />
-
 ```
 **Before Copying/Pasting the main.tf script, follow the instructions below:**
 
