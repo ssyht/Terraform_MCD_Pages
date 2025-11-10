@@ -40,8 +40,11 @@ mkdir -p /tmp/bin /tmp/arculus/ch2
 curl -fsSLo /tmp/terraform.zip "https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_${TF_ARCH}.zip"
 unzip -o /tmp/terraform.zip -d /tmp/bin >/dev/null
 export PATH="/tmp/bin:$PATH"
+```
+```bash
 terraform -version
 ```
+
 ```bash
 export TF_DATA_DIR=/tmp/.tfdata
 export TF_PLUGIN_CACHE_DIR=/tmp/.tfplugins
