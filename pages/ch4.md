@@ -53,40 +53,19 @@ terraform {
 #########################
 # Variables
 #########################
-variable "region" {
-  type    = string
-  default = "us-east-1"
-}
-variable "project" {
-  type    = string
-  default = "terraform-ch4-web"
-}
-variable "availability_zone" {
-  type    = string
-  default = "us-east-1a"
-}
-variable "instance_type" {
-  type    = string
-  default = "t3.micro"
-}
+variable "region"            { type = string, default = "us-east-1" }
+variable "project"           { type = string, default = "terraform-ch4-web" }
+variable "availability_zone" { type = string, default = "us-east-1a" }
+variable "instance_type"     { type = string, default = "t3.micro" }
 
 # SECURITY:
 # - "auto" (default) → locks HTTP to caller's /32 automatically.
-# - If a CIDR is supplied and it's invalid, we'll silently fall back to auto.
-variable "allow_cidr" {
-  type    = string
-  default = "auto"
-}
+# - If a CIDR is supplied and it's invalid, we fall back to auto (no error).
+variable "allow_cidr"        { type = string, default = "auto" }
 
-# Optional SSH (off by default). Prefer SSM in class.
-variable "enable_ssh" {
-  type    = bool
-  default = false
-}
-variable "ssh_cidr" {
-  type    = string
-  default = "127.0.0.1/32" # placeholder; only used if enable_ssh=true
-}
+# Optional SSH (off by default)
+variable "enable_ssh"        { type = bool,   default = false }
+variable "ssh_cidr"          { type = string, default = "127.0.0.1/32" }
 
 #########################
 # Providers
@@ -94,20 +73,20 @@ variable "ssh_cidr" {
 provider "aws"  { region = var.region }
 provider "http" {}
 
-# Detect caller IP for "auto" or for invalid CIDR fallback
+# Detect caller IP for "auto" or invalid-CIDR fallback
 data "http" "myip" { url = "https://checkip.amazonaws.com" }
 
 #########################
 # Locals
 #########################
 locals {
-  web_ami_id    = "ami-0da4418d8d1b56a0c"
-  detected_ip   = chomp(data.http.myip.response_body)
+  web_ami_id  = "ami-0da4418d8d1b56a0c"
+  detected_ip = chomp(data.http.myip.response_body)
 
-  # If allow_cidr == "auto" OR not a valid CIDR → use detected /32
-  effective_cidr = var.allow_cidr == "auto" || !can(cidrnetmask(var.allow_cidr))
-    ? "${local.detected_ip}/32"
-    : var.allow_cidr
+  # Wrap condition in parentheses so multi-line ternary parses correctly
+  effective_cidr = (
+    var.allow_cidr == "auto" || !can(cidrnetmask(var.allow_cidr))
+  ) ? "${local.detected_ip}/32" : var.allow_cidr
 
   user_data = <<-BASH
     #!/bin/bash
@@ -216,10 +195,11 @@ resource "aws_instance" "web" {
 #########################
 # Outputs
 #########################
-output "chapter4_url"   { value = "http://${aws_instance.web.public_ip}" }
-output "public_ip"      { value = aws_instance.web.public_ip }
-output "security_group" { value = aws_security_group.web.id }
-output "http_allowed_from" { value = local.effective_cidr }
+output "chapter4_url"        { value = "http://${aws_instance.web.public_ip}" }
+output "public_ip"           { value = aws_instance.web.public_ip }
+output "security_group_id"   { value = aws_security_group.web.id }
+output "http_allowed_from"   { value = local.effective_cidr }
+
 
 HCL
 
