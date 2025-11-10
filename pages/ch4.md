@@ -31,107 +31,106 @@ mkdir -p "$TF_PLUGIN_CACHE_DIR"
 cd /tmp/arculus/ch3
 ```
 
-## 4.3 Write Main.tf (Grafana on 3000 + guardrail SG)
+## 4.3 Write Main.tf 
 
 This creates a tiny VPC, public subnet, IGW + route, a unique SG that allows only app_port from allow_cidr, then boots Ubuntu and installs Grafana via user_data. An HTTP URL is emitted.
 
 ```bash
-cat > main.tf <<'HCL'
+############################################################
+# Chapter 4 — Static Web (AMI baked with nginx + your page)
+# AMI: ami-0da4418d8d1b56a0c  (us-east-1)
+############################################################
+
 terraform {
+  required_version = ">= 1.6.0"
   required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
-    }
+    aws = { source = "hashicorp/aws", version = "~> 5.0" }
   }
 }
 
-# -------- Variables (multi-line blocks) --------
-variable "region" {
-  type    = string
-  default = "us-east-1"
-}
+provider "aws" { region = "us-east-1" }
 
-variable "project" {
-  type    = string
-  default = "arculus-ch3" # <<<<-------------------- CHANGE IT TO YOUR UNIQUE NAME
-}
+#########################
+# Vars (tweak if needed)
+#########################
+variable "project"      { default = "terraform-ch4-web" }
+variable "instance_type"{ default = "t3.micro" }
+variable "availability_zone" { default = "us-east-1a" }
 
-variable "az" {
-  type    = string
-  default = "us-east-1a"  # change at apply time if needed
-}
+# SECURITY: Start open to verify, then re-apply with your /32.
+# Example: "161.130.189.235/32"
+variable "allow_cidr"   { default = "0.0.0.0/0" }
 
-variable "instance_type" {
-  type    = string
-  default = "t2.medium"
-}
+# Optional SSH (we keep it OFF; use SSM in class)
+variable "enable_ssh"   { default = false }
+variable "ssh_cidr"     { default = "YOUR.PUBLIC.IP/32" }
 
-variable "app_port" {
-  type    = number
-  default = 3000
-}
-
-# Start open for verification; tighten to /32 later
-variable "allow_cidr" {
-  type    = string
-  default = "0.0.0.0/0"
-}
-
-# -------- Provider --------
-provider "aws" {
-  region = var.region
-}
-
-# -------- Minimal Networking --------
-resource "aws_vpc" "vpc" {
-  cidr_block           = "10.1.0.0/16"
-  enable_dns_support   = true
+#########################
+# Minimal networking
+#########################
+resource "aws_vpc" "this" {
+  cidr_block           = "10.44.0.0/16"
   enable_dns_hostnames = true
+  enable_dns_support   = true
   tags = { Name = "${var.project}-vpc" }
 }
 
 resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.vpc.id
+  vpc_id = aws_vpc.this.id
   tags   = { Name = "${var.project}-igw" }
 }
 
-resource "aws_subnet" "public" {
-  vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.1.1.0/24"
+resource "aws_subnet" "public_a" {
+  vpc_id                  = aws_vpc.this.id
+  cidr_block              = "10.44.1.0/24"
+  availability_zone       = var.availability_zone
   map_public_ip_on_launch = true
-  availability_zone       = var.az
-  tags = { Name = "${var.project}-subnet" }
+  tags = { Name = "${var.project}-public-a" }
 }
 
-resource "aws_route_table" "rt" {
-  vpc_id = aws_vpc.vpc.id
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.this.id
   tags   = { Name = "${var.project}-rt" }
 }
 
-resource "aws_route" "default" {
-  route_table_id         = aws_route_table.rt.id
+resource "aws_route" "igw_default" {
+  route_table_id         = aws_route_table.public.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.igw.id
 }
 
-resource "aws_route_table_association" "assoc" {
-  subnet_id      = aws_subnet.public.id
-  route_table_id = aws_route_table.rt.id
+resource "aws_route_table_association" "a" {
+  subnet_id      = aws_subnet.public_a.id
+  route_table_id = aws_route_table.public.id
 }
 
-# -------- Security Group: app port ingress (variable), all egress --------
-resource "aws_security_group" "app" {
-  name_prefix = "sample_terra-guardrails-"
-  description = "Allow app port; all egress"
-  vpc_id      = aws_vpc.vpc.id
+#########################
+# Security Group
+#########################
+resource "aws_security_group" "web" {
+  name_prefix = "${var.project}-sg-"
+  description = "HTTP 80 from allow_cidr; optional SSH; all egress"
+  vpc_id      = aws_vpc.this.id
 
+  # HTTP for the web page
   ingress {
-    from_port   = var.app_port
-    to_port     = var.app_port
+    description = "HTTP"
+    from_port   = 80
+    to_port     = 80
     protocol    = "tcp"
     cidr_blocks = [var.allow_cidr]
-    description = "App port"
+  }
+
+  # Optional SSH (off by default)
+  dynamic "ingress" {
+    for_each = var.enable_ssh ? [1] : []
+    content {
+      description = "SSH (optional)"
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_blocks = [var.ssh_cidr]
+    }
   }
 
   egress {
@@ -141,76 +140,49 @@ resource "aws_security_group" "app" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = { Name = "sample_terra_guardrails" }
+  tags = { Name = "${var.project}-web-sg" }
 }
 
-# -------- Ubuntu 22.04 LTS AMI (Canonical 099720109477) --------
-data "aws_ami" "ubuntu_jammy" {
-  most_recent = true
-  owners      = ["099720109477"]
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
-  }
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-  filter {
-    name   = "architecture"
-    values = ["x86_64"]
-  }
-}
-
-# -------- EC2: Grafana via user_data on port 3000 --------
+#########################
+# EC2 from your baked AMI
+#########################
 locals {
-  user_data = <<-BASH
-    #!/bin/bash
-    set -euxo pipefail
-    apt-get update -y
-    apt-get install -y apt-transport-https software-properties-common wget
-    wget -q -O - https://packages.grafana.com/gpg.key | apt-key add -
-    add-apt-repository "deb https://packages.grafana.com/oss/deb stable main"
-    apt-get update -y
-    apt-get install -y grafana
-    systemctl enable grafana-server
-    systemctl start grafana-server
-  BASH
+  web_ami_id = "ami-0da4418d8d1b56a0c"   # <-- your AMI
+  user_data  = <<'BASH'
+#!/bin/bash
+set -euo pipefail
+# Your AMI already has nginx + /var/www/html.
+# Ensure nginx is enabled/running on boot (idempotent).
+if command -v systemctl >/dev/null 2>&1; then
+  systemctl enable nginx || true
+  systemctl restart nginx || true
+fi
+BASH
 }
 
-resource "aws_instance" "vm" {
-  ami                         = data.aws_ami.ubuntu_jammy.id
+resource "aws_instance" "web" {
+  ami                         = local.web_ami_id
   instance_type               = var.instance_type
-  subnet_id                   = aws_subnet.public.id
-  vpc_security_group_ids      = [aws_security_group.app.id]
+  subnet_id                   = aws_subnet.public_a.id
+  vpc_security_group_ids      = [aws_security_group.web.id]
   associate_public_ip_address = true
   user_data                   = local.user_data
 
   tags = {
     Name    = "${var.project}-vm"
     Project = var.project
-    Role    = "grafana"
+    Role    = "chapter4-web"
   }
 }
 
-# -------- Outputs --------
-output "public_ip" {
-  value = aws_instance.vm.public_ip
-}
+#########################
+# Outputs
+#########################
+output "chapter4_url"   { value = "http://${aws_instance.web.public_ip}" }
+output "public_ip"      { value = aws_instance.web.public_ip }
+output "security_group" { value = aws_security_group.web.id }
+output "note"           { value = "AFTER VERIFY: re-apply with -var=allow_cidr=YOUR.IP/32 (or close 80 and use SSM port-forwarding)." }
 
-output "url" {
-  value = "http://${aws_instance.vm.public_ip}:${var.app_port}"
-}
-
-output "sg_id" {
-  value = aws_security_group.app.id
-}
-
-output "az_used" {
-  value = var.az
-}
-HCL
 ```
 
 ## 4.4 Init & Apply
