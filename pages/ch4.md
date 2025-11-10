@@ -262,11 +262,7 @@ terraform output
 
 * Once you've entered the link based on the output, you will arrive in the Grafana UI.
 
-<p align="center"> <img src="../img/ch3_graffana_ui.png" width="700px"></p>
-
-* Here you can enter the default **"Username: Admin"** and **"Password: Admin"**. Then, you can reset your password and enter the portal.
-
-<p align="center"> <img src="../img/ch3_graffana_portal.png" width="1200px"></p>
+<p align="center"> <img src="../img/ch4_webpage.png" width="600px"></p>
 
 ## 4.6 Cleanup
 ```bash
