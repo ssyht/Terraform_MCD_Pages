@@ -266,9 +266,7 @@ terraform output
 
 ## 4.6 Cleanup
 ```bash
-terraform destroy -auto-approve \
-  -var="region=${AWS_REGION}" \
-  -var="az=$(terraform output -raw az_used 2>/dev/null || echo us-east-1a)"
+terraform destroy -auto-approve
 ```
 <p align="center"> <img src="../img/ch3_destroy.png" width="700px"></p>
 
