@@ -243,10 +243,12 @@ HCL
 
 ## 4.4 Init & Apply
 ```bash
-terraform init -reconfigure
+terraform init
 terraform fmt
 terraform validate
-terraform apply -auto-approve -var="region=${AWS_REGION}" -var="az=us-east-1a"
+terraform apply -auto-approve -var="allow_cidr=0.0.0.0/0"
+# verify, then lock down:
+terraform apply -auto-approve -var="allow_cidr=YOUR.PUBLIC.IP/32"
 ```
  * If the AZ rejects t2.medium, re-run with a supported one:
 
