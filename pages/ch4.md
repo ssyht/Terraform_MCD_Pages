@@ -262,7 +262,7 @@ terraform output
 
 * Once you've entered the link based on the output, you will arrive in the Grafana UI.
 
-<p align="center"> <img src="../img/ch4_webpage.png" width="600px"></p>
+<p align="center"> <img src="../img/ch4_portal_ui.png" width="600px"></p>
 
 ## 4.6 Cleanup
 ```bash
