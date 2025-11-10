@@ -36,11 +36,6 @@ cd /tmp/arculus/ch3
 This creates a tiny VPC, public subnet, IGW + route, a unique SG that allows only app_port from allow_cidr, then boots Ubuntu and installs Grafana via user_data. An HTTP URL is emitted.
 
 ```bash
-############################################################
-# Chapter 4 — Static Web (AMI baked with nginx + your page)
-# AMI: ami-0da4418d8d1b56a0c  (us-east-1)
-############################################################
-
 terraform {
   required_version = ">= 1.6.0"
   required_providers {
@@ -51,7 +46,7 @@ terraform {
 provider "aws" { region = "us-east-1" }
 
 #########################
-# Vars (tweak if needed)
+# Vars (NOTE: make changes to the project name, type a unique name)
 #########################
 variable "project"      { default = "terraform-ch4-web" }
 variable "instance_type"{ default = "t3.micro" }
